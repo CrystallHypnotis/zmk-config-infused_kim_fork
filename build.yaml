@@ -19,9 +19,9 @@
 ---
 include:
 #------ Proj1 ------
-  - board: nice_nano//zmk
+  - board: nice_nano_v2
     shield: corne_tp_left
-  - board: nice_nano//zmk
+  - board: nice_nano_v2
     shield: corne_tp_right
 
   # Settings Reset firmware
@@ -31,5 +31,5 @@ include:
   #
   # More info:
   # https://zmk.dev/docs/troubleshooting#split-keyboard-halves-unable-to-pair
-  - board: nice_nano//zmk
+  - board: nice_nano_v2
     shield: settings_reset
