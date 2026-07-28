@@ -1,14 +1,28 @@
 manifest:
   defaults:
-    revision: v0.3
+    revision: main
   remotes:
     - name: zmkfirmware
       url-base: https://github.com/zmkfirmware
+
+    #Additional repo for infused-kim drivers PS/2 support
+    - name: infused-kim
+      url-base: https://github.com/infused-kim
+
     # Additional modules containing boards/shields/custom code can be listed here as well
     # See https://docs.zephyrproject.org/3.2.0/develop/west/manifest.html#projects
   projects:
+    # infused-kim's zmk fork with mouse PR, which might be a bit outdated, but
+    # is known to be compatible with the PS/2 mouse & TP driver module.
     - name: zmk
-      remote: zmkfirmware
+      remote: infused-kim
+      revision: pr-testing/mouse_ps2_module_base
       import: app/west.yml
+
+    # Additional driver for PS/2 support
+    - name: kb_zmk_ps2_mouse_trackpoint_driver
+      remote: infused-kim
+      revision: main
+
   self:
     path: config
