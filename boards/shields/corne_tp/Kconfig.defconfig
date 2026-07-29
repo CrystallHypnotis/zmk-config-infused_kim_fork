@@ -54,3 +54,10 @@ endchoice
 endif # LVGL
 
 endif
+
+# Force-disable the original PS/2 input listener unless mouse driver is active.
+# This prevents compilation of input_listener_ps2.c on peripheral (where
+# ZMK_INPUT_MOUSE_PS2=n due to depends on central role), avoiding errors
+# from zmk_keymap_layer_activate() 1-arg vs 2-arg signature mismatch.
+config ZMK_INPUT_LISTENER_PS2
+	depends on ZMK_INPUT_MOUSE_PS2
