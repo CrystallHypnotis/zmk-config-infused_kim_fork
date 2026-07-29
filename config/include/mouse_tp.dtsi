@@ -79,8 +79,10 @@
     * - Peripheral: our listener (re-injects via input_report → ZMK_INPUT_SPLIT)
     */
 
-    #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+    #ifdef CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+      // Central role: use original listener, disable peripheral listener
       &mouse_ps2_input_listener {
+        status = "okay";
 
         // Adjust pointing device axes.
         // xy-swap;
@@ -97,7 +99,12 @@
         layer-toggle-timeout-ms = <250>;
       };
     #else
+      // Peripheral role: use our listener, disable original listener
+      &mouse_ps2_input_listener {
+        status = "disabled";
+      };
       &mouse_ps2_peripheral_listener {
+        status = "okay";
 
         // Adjust pointing device axes.
         // xy-swap;

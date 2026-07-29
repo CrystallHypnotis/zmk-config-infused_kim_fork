@@ -493,7 +493,7 @@
         pinctrl-0 = <&uart0_ps2_default>;
         pinctrl-1 = <&uart0_ps2_off>;
 
-        pinctrl-names = "default", "off";
+        pinctrl-names = "default", "sleep";
 
         uart_ps2: uart_ps2 {
             status="disabled";
