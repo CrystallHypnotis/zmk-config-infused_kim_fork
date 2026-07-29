@@ -58,9 +58,7 @@ static void clear_xy_data(struct input_listener_xy_data *data) {
     data->mode = INPUT_LISTENER_XY_DATA_MODE_NONE;
 }
 
-static void input_handler_split_central(const struct device *dev_unused, struct input_event *evt,
-                                         void *user_data) {
-    ARG_UNUSED(dev_unused);
+static void input_handler_split_central(struct input_event *evt, void *user_data) {
     struct input_listener_split_central_data *data = user_data;
 
     switch (evt->type) {
@@ -144,8 +142,11 @@ static void input_handler_split_central(const struct device *dev_unused, struct 
             static struct input_listener_split_central_data data_##n = {                           \
                 .dev = DEVICE_DT_INST_GET(n),                                                      \
             };                                                                                     \
-            INPUT_CALLBACK_DEFINE(DEVICE_DT_GET(DT_INST_PHANDLE(n, device)),                   \
-                                   input_handler_split_central, &data_##n);                      \
+            static void input_handler_split_central_##n(struct input_event *evt) {                 \
+                input_handler_split_central(evt, &data_##n);                                       \
+            }                                                                                      \
+            INPUT_CALLBACK_DEFINE(DEVICE_DT_GET(DT_INST_PHANDLE(n, device)),                       \
+                                  input_handler_split_central_##n);                                \
             static int zmk_input_listener_split_central_init_##n(const struct device *dev) {       \
                 return 0;                                                                          \
             }                                                                                      \
