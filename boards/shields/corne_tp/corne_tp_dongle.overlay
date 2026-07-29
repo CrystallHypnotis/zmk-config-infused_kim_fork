@@ -24,4 +24,17 @@ RC(2,0) RC(2,1) RC(2,2) RC(2,3) RC(2,4) RC(2,5)  RC(2,6) RC(2,7) RC(2,8) RC(2,9)
                         RC(3,3) RC(3,4) RC(3,5)  RC(3,6) RC(3,7) RC(3,8)
         >;
     };
+
+    // Split input transport - receives forwarded mouse events from peripheral
+    input_split: input_split {
+        compatible = "zmk,input-split";
+        status = "okay";
+    };
+
+    // Central-side input listener for forwarded peripheral mouse events
+    split_central_listener: split_central_listener {
+        compatible = "zmk,input-listener-split-central";
+        status = "okay";
+        device = <&input_split>;
+    };
 };

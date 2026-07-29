@@ -534,16 +534,27 @@
 #endif
     };
 
-    mouse_ps2_input_listener: mouse_ps2_input_listener {
-        compatible = "zmk,input-listener-ps2";
-        status = "disabled";
+	    mouse_ps2_input_listener: mouse_ps2_input_listener {
+	        compatible = "zmk,input-listener-ps2";
+	        status = "disabled";
 
-        device = <&mouse_ps2>;
+	        device = <&mouse_ps2>;
 
-		// Some of the available settings depend on the keymap. So they
-		// are adjusted in...
-		// zmk-config/config/includes/mouse_tp.dtsi
-    };
-};
+			// Some of the available settings depend on the keymap. So they
+			// are adjusted in...
+			// zmk-config/config/includes/mouse_tp.dtsi
+	    };
+
+	    // Peripheral-side input listener.
+	    // On peripheral (right half), this listener accumulates mouse events
+	    // and re-injects them via input_report() so ZMK_INPUT_SPLIT can
+	    // forward them to the central.
+	    mouse_ps2_peripheral_listener: mouse_ps2_peripheral_listener {
+	        compatible = "zmk,input-listener-ps2-peripheral";
+	        status = "disabled";
+
+	        device = <&mouse_ps2>;
+	    };
+	};
 
 #endif // TRACKPOINT_ON_RIGHT

@@ -1,0 +1,35 @@
+description: |
+  PS/2 input listener for peripheral side.
+  Accumulates and filters PS/2 mouse events, then re-injects them
+  via input_report() for forwarding to central via ZMK_INPUT_SPLIT.
+
+compatible: "zmk,input-listener-ps2-peripheral"
+
+properties:
+  device:
+    type: phandle
+    required: true
+    description: The input device (mouse_ps2) to listen on.
+  xy-swap:
+    type: boolean
+  x-invert:
+    type: boolean
+  y-invert:
+    type: boolean
+  scale-multiplier:
+    type: int
+    default: 1
+  scale-divisor:
+    type: int
+    default: 1
+  layer-toggle:
+    type: int
+    default: -1
+    required: false
+    description: Layer to toggle on mouse movement.
+  layer-toggle-delay-ms:
+    type: int
+    default: 250
+  layer-toggle-timeout-ms:
+    type: int
+    default: 250

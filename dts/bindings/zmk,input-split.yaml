@@ -1,0 +1,12 @@
+description: |
+  Enables split input transport between peripheral and central.
+  On peripheral: forwards all input events to the central.
+  On central: receives input events from peripherals.
+
+compatible: "zmk,input-split"
+
+properties:
+  label:
+    type: string
+    required: false
+    description: Human-readable label.

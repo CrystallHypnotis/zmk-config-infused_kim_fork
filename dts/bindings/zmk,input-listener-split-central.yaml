@@ -1,0 +1,11 @@
+description: |
+  Split central input listener for mouse events forwarded from peripheral.
+  Receives input events via ZMK_INPUT_SPLIT and converts them to HID mouse reports.
+
+compatible: "zmk,input-listener-split-central"
+
+properties:
+  device:
+    type: phandle
+    required: true
+    description: The input-split device to listen on.

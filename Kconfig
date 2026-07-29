@@ -1,0 +1,33 @@
+# Copyright (c) 2024
+# SPDX-License-Identifier: MIT
+
+# Override: enable PS/2 mouse driver on peripheral side
+# The original module has `depends on (!ZMK_SPLIT || ZMK_SPLIT_ROLE_CENTRAL)`
+# which prevents compilation on peripheral. We provide an alternative config
+# that works on both central and peripheral.
+
+config ZMK_INPUT_MOUSE_PS2_PERIPHERAL
+	bool "PS/2 Mouse support on peripheral side"
+	select ZMK_MOUSE
+	select PS2
+	default y
+	help
+	  Enables PS/2 mouse/trackpoint driver to compile and run on the
+	  peripheral side of a split keyboard. Uses ZMK's input split
+	  mechanism to forward mouse events to the central half.
+
+# Enable our peripheral input listener when mouse is on peripheral
+DT_COMPAT_ZMK_INPUT_LISTENER_PS2_PERIPHERAL := zmk,input-listener-ps2-peripheral
+config ZMK_INPUT_LISTENER_PS2_PERIPHERAL
+	bool
+	default $(dt_compat_enabled,$(DT_COMPAT_ZMK_INPUT_LISTENER_PS2_PERIPHERAL))
+
+# Enable our central split input listener when mouse is on peripheral
+DT_COMPAT_ZMK_INPUT_LISTENER_SPLIT_CENTRAL := zmk,input-listener-split-central
+config ZMK_INPUT_LISTENER_SPLIT_CENTRAL
+	bool
+	default $(dt_compat_enabled,$(DT_COMPAT_ZMK_INPUT_LISTENER_SPLIT_CENTRAL))
+
+# Also enable mouse setting behavior when our peripheral driver is active
+config ZMK_BEHAVIOR_MOUSE_SETTING
+	default ZMK_INPUT_MOUSE_PS2_PERIPHERAL

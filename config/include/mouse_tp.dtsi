@@ -178,6 +178,13 @@
       status = "okay";
     };
 
+    // Enable the peripheral-side listener.
+    // On central this won't have any effect because the node
+    // only exists in the peripheral overlay.
+    &mouse_ps2_peripheral_listener {
+      status = "okay";
+    };
+
     #ifdef MOUSE_PS2_DRIVER_UART
 
       &uart0 {
