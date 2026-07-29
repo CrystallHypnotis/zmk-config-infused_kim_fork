@@ -25,6 +25,7 @@
         ;
 };
 
+#ifdef TRACKPOINT_ON_RIGHT
 
 /*
  * PS/2 Mouse / Trackpoint - User Configuration
@@ -492,7 +493,7 @@
         pinctrl-0 = <&uart0_ps2_default>;
         pinctrl-1 = <&uart0_ps2_off>;
 
-        pinctrl-names = "default", "sleep";
+        pinctrl-names = "default", "off";
 
         uart_ps2: uart_ps2 {
             status="disabled";
@@ -544,3 +545,5 @@
 		// zmk-config/config/includes/mouse_tp.dtsi
     };
 };
+
+#endif // TRACKPOINT_ON_RIGHT

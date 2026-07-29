@@ -23,6 +23,9 @@ include:
     shield: corne_tp_left
   - board: nice_nano_v2
     shield: corne_tp_right
+  - board: nice_nano_v2
+    shield: corne_tp_dongle
+
 
   # Settings Reset firmware
   # This will build a firmware that can wipe all settings from your
