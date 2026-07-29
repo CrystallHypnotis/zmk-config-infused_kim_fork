@@ -74,53 +74,38 @@
    /*
     * Input Listener Config & Activation
     *
-    * Enable the correct listener based on split role and apply settings.
-    * - Central: original listener (direct zmk_hid_mouse_* calls)
-    * - Peripheral: our listener (re-injects via input_report → ZMK_INPUT_SPLIT)
+    * Always use the peripheral listener (our custom one) on the half that has
+    * the trackpoint. The original listener (mouse_ps2_input_listener) is always
+    * disabled on this half because it calls central-only zmk_endpoints_*
+    * functions.
+    *
+    * On the dongle/central, mouse events arrive via ZMK_INPUT_SPLIT and are
+    * handled by split_central_listener (defined in corne_tp_dongle.overlay).
     */
 
-    #ifdef CONFIG_ZMK_SPLIT_ROLE_CENTRAL
-      // Central role: use original listener, disable peripheral listener
-      &mouse_ps2_input_listener {
-        status = "okay";
+    // Always disable the original central-only listener
+    &mouse_ps2_input_listener {
+      status = "disabled";
+    };
 
-        // Adjust pointing device axes.
-        // xy-swap;
-        // x-invert;
-        // y-invert;
+    // Always enable our peripheral-side listener
+    &mouse_ps2_peripheral_listener {
+      status = "okay";
 
-        // Set the layer that should automatically activate when the mouse is moving.
-        layer-toggle = <MOUSE_TP>;
+      // Adjust pointing device axes.
+      // xy-swap;
+      // x-invert;
+      // y-invert;
 
-        // How long the mouse needs to move before the layer is activated (Default: 250)
-        layer-toggle-delay-ms = <250>;
+      // Set the layer that should automatically activate when the mouse is moving.
+      layer-toggle = <MOUSE_TP>;
 
-        // How long to wait after last mouse movement before deactivating (Default: 250)
-        layer-toggle-timeout-ms = <250>;
-      };
-    #else
-      // Peripheral role: use our listener, disable original listener
-      &mouse_ps2_input_listener {
-        status = "disabled";
-      };
-      &mouse_ps2_peripheral_listener {
-        status = "okay";
+      // How long the mouse needs to move before the layer is activated (Default: 250)
+      layer-toggle-delay-ms = <250>;
 
-        // Adjust pointing device axes.
-        // xy-swap;
-        // x-invert;
-        // y-invert;
-
-        // Set the layer that should automatically activate when the mouse is moving.
-        layer-toggle = <MOUSE_TP>;
-
-        // How long the mouse needs to move before the layer is activated (Default: 250)
-        layer-toggle-delay-ms = <250>;
-
-        // How long to wait after last mouse movement before deactivating (Default: 250)
-        layer-toggle-timeout-ms = <250>;
-      };
-    #endif
+      // How long to wait after last mouse movement before deactivating (Default: 250)
+      layer-toggle-timeout-ms = <250>;
+    };
 
 
    /*
