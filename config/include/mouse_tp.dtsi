@@ -72,31 +72,48 @@
   #ifdef MOUSE_PS2_DT_PRESENT
 
    /*
-    * Input Listener Config
+    * Input Listener Config & Activation
+    *
+    * Enable the correct listener based on split role and apply settings.
+    * - Central: original listener (direct zmk_hid_mouse_* calls)
+    * - Peripheral: our listener (re-injects via input_report → ZMK_INPUT_SPLIT)
     */
 
-    &mouse_ps2_input_listener {
+    #if CONFIG_ZMK_SPLIT_ROLE_CENTRAL
+      &mouse_ps2_input_listener {
 
-      // Adjust pointing device axes.
-      // This adjusts the values inside the zmk driver. Some
-      // trackpoints also allow you to adjust it in their firmware. Check
-      // the driver options below for more info.
-      // xy-swap;
-      // x-invert;
-      // y-invert;
+        // Adjust pointing device axes.
+        // xy-swap;
+        // x-invert;
+        // y-invert;
 
-      // Set the layer that should automatically activate when the mouse is
-      // moving.
-      layer-toggle = <MOUSE_TP>;
+        // Set the layer that should automatically activate when the mouse is moving.
+        layer-toggle = <MOUSE_TP>;
 
-      // How long the mouse needs to move for before the layer is activated (to
-      // avoid accidental activations while typing) (Default: 250)
-      layer-toggle-delay-ms = <250>;
+        // How long the mouse needs to move before the layer is activated (Default: 250)
+        layer-toggle-delay-ms = <250>;
 
-      // How long to wait, after the last mouse movement, before deactivating
-      // the layer (Default: 250)
-      layer-toggle-timeout-ms = <250>;
-    };
+        // How long to wait after last mouse movement before deactivating (Default: 250)
+        layer-toggle-timeout-ms = <250>;
+      };
+    #else
+      &mouse_ps2_peripheral_listener {
+
+        // Adjust pointing device axes.
+        // xy-swap;
+        // x-invert;
+        // y-invert;
+
+        // Set the layer that should automatically activate when the mouse is moving.
+        layer-toggle = <MOUSE_TP>;
+
+        // How long the mouse needs to move before the layer is activated (Default: 250)
+        layer-toggle-delay-ms = <250>;
+
+        // How long to wait after last mouse movement before deactivating (Default: 250)
+        layer-toggle-timeout-ms = <250>;
+      };
+    #endif
 
 
    /*
@@ -171,17 +188,6 @@
     // block, which prevents compilation and potential build errors when we
     // undefine HAS_MOUSE_TP in corne_tp.keymap
     &mouse_ps2  {
-      status = "okay";
-    };
-
-    &mouse_ps2_input_listener {
-      status = "okay";
-    };
-
-    // Enable the peripheral-side listener.
-    // On central this won't have any effect because the node
-    // only exists in the peripheral overlay.
-    &mouse_ps2_peripheral_listener {
       status = "okay";
     };
 
