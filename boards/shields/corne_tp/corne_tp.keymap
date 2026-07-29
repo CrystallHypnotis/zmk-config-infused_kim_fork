@@ -164,9 +164,9 @@
     };
 
 #endif
-  };
+
     Adjust_layer {
-    display-name = "Raise";
+    display-name = "Adjust";
 // -----------------------------------------------------------------------------------------
 //| BLDR |     |     |     |     |     |   |     |     |     |     |     | BLDR |
 //| BTCLR| BT0 | BT1 | BT2 | BT3 | BT4 |   | BT4 | BT3 | BT2 | BT1 | BT0 | BTCLR|
@@ -179,4 +179,5 @@
                                                               &trans       &none     &trans           &trans &none        &trans
                         >;
                 };
+  };
 };
