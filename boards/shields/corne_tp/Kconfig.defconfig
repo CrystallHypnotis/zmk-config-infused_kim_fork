@@ -55,9 +55,11 @@ endif # LVGL
 
 endif
 
-# Force-disable the original PS/2 input listener unless mouse driver is active.
-# This prevents compilation of input_listener_ps2.c on peripheral (where
-# ZMK_INPUT_MOUSE_PS2=n due to depends on central role), avoiding errors
-# from zmk_keymap_layer_activate() 1-arg vs 2-arg signature mismatch.
-config ZMK_INPUT_LISTENER_PS2
-	depends on ZMK_INPUT_MOUSE_PS2
+# Enable urob compatibility on peripheral too.
+# The original PS/2 listener uses UROB_COMPAT to call zmk_keymap_layer_activate()
+# with correct 2-arg signature (layer, sensor) vs broken 1-arg.
+# This config is normally inside `if ZMK_INPUT_MOUSE_PS2` in the module's Kconfig,
+# but ZMK_INPUT_MOUSE_PS2=n on peripheral. We define it unconditionally here.
+config ZMK_INPUT_MOUSE_PS2_ENABLE_UROB_COMPAT
+	bool
+	default y

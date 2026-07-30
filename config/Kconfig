@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: MIT
+
+# Force-disable the original PS/2 input listener on peripheral side.
+# The original listener calls zmk_endpoints_send_mouse_report() (central-only)
+# and zmk_keymap_layer_activate() with a 1-arg signature that's incompatible
+# with urob's ZMK fork (which uses 2-arg: layer + sensor).
+# Our peripheral listener (input_listener_ps2_peripheral.c) handles events instead.
+config ZMK_INPUT_LISTENER_PS2
+	depends on ZMK_INPUT_MOUSE_PS2

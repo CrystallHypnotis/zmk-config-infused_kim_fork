@@ -22,6 +22,16 @@ if(DEFINED ${PS2_MODULE_DIR_VAR})
     else()
         message(WARNING "PS2 mouse driver source not found at ${PS2_DRIVER_SRC}")
     endif()
+
+    # Fix compilation of the original input_listener_ps2.c from the module.
+    # In urob's/infused-kim's ZMK fork, zmk_keymap_layer_activate takes 2 args
+    # (layer, sensor), but the upstream PS/2 module calls it with 1 arg.
+    # Force-include a compat header that wraps the 1-arg call with NULL sensor.
+    set(PS2_LISTENER_SRC "${${PS2_MODULE_DIR_VAR}}/src/mouse/input_listener_ps2.c")
+    if(EXISTS ${PS2_LISTENER_SRC})
+        set_source_files_properties(${PS2_LISTENER_SRC} PROPERTIES
+            COMPILE_FLAGS "-include ${CMAKE_CURRENT_SOURCE_DIR}/src/compat_ps2_listener.h")
+    endif()
 else()
     message(WARNING "PS2 module directory variable ${PS2_MODULE_DIR_VAR} not defined")
 endif()
