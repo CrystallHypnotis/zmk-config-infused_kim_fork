@@ -22,22 +22,18 @@ if(DEFINED ${PS2_MODULE_DIR_VAR})
     else()
         message(WARNING "PS2 mouse driver source not found at ${PS2_DRIVER_SRC}")
     endif()
-
-    # Fix compilation of the original input_listener_ps2.c from the module.
-    # In urob's/infused-kim's ZMK fork, zmk_keymap_layer_activate takes 2 args
-    # (layer, sensor), but the upstream PS/2 module calls it with 1 arg.
-    # Force-include a compat header that wraps the 1-arg call with NULL sensor.
-    set(PS2_LISTENER_SRC "${${PS2_MODULE_DIR_VAR}}/src/mouse/input_listener_ps2.c")
-    if(EXISTS ${PS2_LISTENER_SRC})
-        set_source_files_properties(${PS2_LISTENER_SRC} PROPERTIES
-            COMPILE_FLAGS "-include ${CMAKE_CURRENT_SOURCE_DIR}/src/compat_ps2_listener.h")
-    endif()
 else()
     message(WARNING "PS2 module directory variable ${PS2_MODULE_DIR_VAR} not defined")
 endif()
 
 # Peripheral-side input listener
 target_sources_ifdef(CONFIG_ZMK_INPUT_LISTENER_PS2_PERIPHERAL app PRIVATE src/input_listener_ps2_peripheral.c)
+
+# Weak stubs for central-only ZMK functions (zmk_endpoints_send_mouse_report etc.)
+# The original PS/2 listener references these, but they don't exist on peripheral.
+# Weak symbols satisfy the linker on peripheral; strong ZMK definitions take
+# precedence on central.
+target_sources_ifdef(CONFIG_ZMK_INPUT_MOUSE_PS2_PERIPHERAL app PRIVATE src/peripheral_endpoint_stubs.c)
 
 # Central-side input listener
 target_sources_ifdef(CONFIG_ZMK_INPUT_LISTENER_SPLIT_CENTRAL app PRIVATE src/input_listener_split_central.c)
